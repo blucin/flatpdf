@@ -1,15 +1,27 @@
 package pdf
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 )
 
-func TestFlattenReturnsPath(t *testing.T) {
-	path := "~/testFile.pdf"
-	got, err := Flatten(path)
+// Make sure that projectPath/assets/testFileForFlat.pdf before running tests
 
+func TestFlattenReturnsValidPath(t *testing.T) {
+	current, err := os.Getwd()
+	parentPath := filepath.Dir(current)
 	if err != nil {
 		t.Error(err)
-		t.Errorf("Flatten('~/testFile.pdf') = %v; want path to flattened pdf", got)
+	}
+
+	got, err := Flatten(parentPath + "/assets/testFileForFlat.pdf")
+	if err != nil {
+		t.Error(err)
+	}
+
+	// check if file is a pdf
+	if filepath.Ext(got) != ".pdf" {
+		t.Errorf("Flatten() should return a .pdf file path, got %s", got)
 	}
 }
