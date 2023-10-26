@@ -30,7 +30,7 @@ func Flatten(mw *imagick.MagickWand, index int, filePathStr string) (string, err
 		return "", errors.New("failed to create temp dir")
 	}
 	imagePaths, err := convertPDFToImages(mw, filePathStr, tempDir)
-	fmt.Fprintf(os.Stderr, "imagePaths: %v\n", imagePaths)
+	//fmt.Fprintf(os.Stderr, "imagePaths: %v\n", imagePaths)
 	if err != nil {
 		return "", errors.New("failed to convert pdf to images")
 	}
