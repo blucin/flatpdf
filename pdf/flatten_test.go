@@ -37,40 +37,35 @@ func runFlatten(t *testing.T) (string, error) {
 	return got, nil
 }
 
-/*
-	func TestFlattenReturnsValidPath(t *testing.T) {
-		got, err := runFlatten(t)
-		if err != nil {
-			t.Error(err)
-		}
-
-		// check if file is a pdf
-		if filepath.Ext(got) != ".pdf" {
-			t.Errorf("Flatten() should return a .pdf file path, got %s", got)
-		}
-
-		// cleanup
-		if err := os.Remove(got); err != nil {
-			t.Error(err)
-		}
+func TestFlattenReturnsValidPath(t *testing.T) {
+	got, err := runFlatten(t)
+	if err != nil {
+		t.Error(err)
 	}
-*/
+	// check if file is a pdf
+	if filepath.Ext(got) != ".pdf" {
+		t.Errorf("Flatten() should return a .pdf file path, got %s", got)
+	}
+	// cleanup
+	if err := os.Remove(got); err != nil {
+		t.Error(err)
+	}
+}
+
 func TestFlattenCreatesFile(t *testing.T) {
 	got, err := runFlatten(t)
 	t.Log(got)
 	if err != nil {
 		t.Error(err)
 	}
-
 	// check if file exists
 	if _, err := os.Stat(got); errors.Is(err, os.ErrNotExist) {
 		t.Error("Flatten() did not create a file at expected path")
 	}
 
-	/*
-		// cleanup
-		if err := os.Remove(got); err != nil {
-			t.Error(err)
-		}
-	*/
+	// cleanup
+	if err := os.Remove(got); err != nil {
+		t.Error(err)
+	}
+
 }
