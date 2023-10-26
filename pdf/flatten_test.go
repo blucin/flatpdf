@@ -28,7 +28,7 @@ func runFlatten(t *testing.T) (string, error) {
 	mw.SetImageFormat("jpg")
 	mw.SetImageCompressionQuality(99)
 
-	got, err := Flatten(mw, 0, parentPath+"/assets/testFileForFlat.pdf")
+	got, err := Flatten(mw, 0, parentPath+"/assets/testFileForFlat.pdf", ".")
 
 	if err != nil {
 		return got, err

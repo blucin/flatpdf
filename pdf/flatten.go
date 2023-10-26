@@ -15,14 +15,21 @@ import (
 // Flatten takes a PDF file path & imagick MagickWand instance
 // and flattens it to make it read-only.
 // It returns the path of the flattened PDF file with _flat appended to the filename.
-func Flatten(mw *imagick.MagickWand, index int, filePathStr string) (string, error) {
+func Flatten(mw *imagick.MagickWand, index int, filePathStr string, outputDir string) (string, error) {
 	fileExtension := filepath.Ext(filePathStr)
-
+	var flattenedPath string
 	if fileExtension != ".pdf" {
 		return "", errors.New("flatten only works with .pdf files")
 	}
 
-	flattenedPath := fmt.Sprintf("%s_flat%s", filePathStr[:len(filePathStr)-len(fileExtension)], fileExtension)
+	if outputDir != "." {
+		if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
+			return "", errors.New("failed to create output dir")
+		}
+		flattenedPath = filepath.Join(outputDir, fmt.Sprintf("%s_flat%s", filepath.Base(filePathStr[:len(filePathStr)-len(fileExtension)]), fileExtension))
+	} else {
+		flattenedPath = fmt.Sprintf("%s_flat%s", filePathStr[:len(filePathStr)-len(fileExtension)], fileExtension)
+	}
 
 	// convert PDF to images
 	tempDir, err := os.MkdirTemp("", "flatpdf_temp")

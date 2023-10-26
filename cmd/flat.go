@@ -26,7 +26,6 @@ var flatCmd = &cobra.Command{
 		outputFiles, err := pdf.FlattenPDF(args, OutputDir, pdf.FlattenPDFOptions{
 			ImageDensity: ImageDensity,
 			ImageQuality: ImageQuality,
-			OutputDir:    OutputDir,
 		})
 
 		if err != nil {

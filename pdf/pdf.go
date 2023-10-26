@@ -26,7 +26,6 @@ func validatePDF(filePath string) error {
 type FlattenPDFOptions struct {
 	ImageDensity int // recommended: 200-300 (low) or 600 (medium) or 1200 (high)
 	ImageQuality int // recommended: 0-100
-	OutputDir    string
 }
 
 // FlattenPDF takes a slice of PDF file paths, validates them and
@@ -48,8 +47,8 @@ func FlattenPDF(filePaths []string, outputDir string, opts FlattenPDFOptions) ([
 		return nil, fmt.Errorf("image quality must be between 0 and 100")
 	}
 
-	if opts.OutputDir == "" {
-		opts.OutputDir = "."
+	if outputDir == "" {
+		outputDir = "."
 	}
 
 	// TODO: detect pdf paper size (A4, A5, etc.)
@@ -67,7 +66,7 @@ func FlattenPDF(filePaths []string, outputDir string, opts FlattenPDFOptions) ([
 	mw.SetImageCompressionQuality(uint(opts.ImageQuality))
 
 	for i, filePathStr := range filePaths {
-		out, err := Flatten(mw, i, filePathStr)
+		out, err := Flatten(mw, i, filePathStr, outputDir)
 		if err != nil {
 			return nil, err
 		} else {
