@@ -8,8 +8,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "flatpdf",
-	Short: "A multithreaded pdf flattener to make them read-only",
-	Long: `flatpdf is a multithreaded pdf flattener to make them read-only.
+	Short: "A pdf flattener to make them read-only",
+	Long: `flatpdf is a pdf flattener to make them read-only.
 Pass pdf files as arguments to flat, new pdf files will be generated
 with the same name but with the suffix '_flat'. Use the -h flag to 
 see all available options.`,
