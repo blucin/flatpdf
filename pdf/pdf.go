@@ -23,9 +23,22 @@ func validatePDF(filePath string) error {
 	return nil
 }
 
+func worker(id int, mw *imagick.MagickWand, outputDir string, jobs <-chan string, results chan<- string) error {
+	for job := range jobs {
+		fmt.Printf("Worker %d started job %s\n", id, job)
+		flattened, err := Flatten(mw, id, job, outputDir)
+		if err != nil {
+			return err
+		}
+		results <- flattened
+	}
+	return nil
+}
+
 type FlattenPDFOptions struct {
 	ImageDensity int // recommended: 200-300 (low) or 600 (medium) or 1200 (high)
 	ImageQuality int // recommended: 0-100
+	Threads      int // default: 0
 }
 
 // FlattenPDF takes a slice of PDF file paths, validates them and
@@ -65,14 +78,35 @@ func FlattenPDF(filePaths []string, outputDir string, opts FlattenPDFOptions) ([
 	mw.SetImageFormat("jpg")
 	mw.SetImageCompressionQuality(uint(opts.ImageQuality))
 
-	for i, filePathStr := range filePaths {
-		out, err := Flatten(mw, i, filePathStr, outputDir)
-		if err != nil {
-			return nil, err
-		} else {
-			outputFiles = append(outputFiles, out)
+	// threading disabled
+	if opts.Threads == 0 {
+		for i, filePathStr := range filePaths {
+			out, err := Flatten(mw, i, filePathStr, outputDir)
+			if err != nil {
+				return nil, err
+			} else {
+				outputFiles = append(outputFiles, out)
+			}
 		}
+		return outputFiles, nil
 	}
 
+	// threading enabled
+	jobs := make(chan string, len(filePaths))
+	results := make(chan string, len(filePaths))
+
+	for w := 1; w <= opts.Threads; w++ {
+		go worker(w, mw, outputDir, jobs, results)
+	}
+
+	for j := 1; j <= len(filePaths); j++ {
+		jobs <- filePaths[j-1]
+	}
+	close(jobs)
+
+	for a := 1; a <= len(filePaths); a++ {
+		out := <-results
+		outputFiles = append(outputFiles, out)
+	}
 	return outputFiles, nil
 }

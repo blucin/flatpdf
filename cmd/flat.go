@@ -9,12 +9,14 @@ import (
 
 var ImageDensity int
 var ImageQuality int
+var Threads int
 var OutputDir string
 
 func init() {
 	rootCmd.AddCommand(flatCmd)
 	flatCmd.PersistentFlags().IntVarP(&ImageDensity, "density", "d", 600, "image density")
 	flatCmd.PersistentFlags().IntVarP(&ImageQuality, "quality", "q", 99, "image quality (0-100)")
+	flatCmd.PersistentFlags().IntVarP(&Threads, "threads", "t", 0, "number of threads (default 0)")
 	flatCmd.PersistentFlags().StringVarP(&OutputDir, "output", "o", "", "output directory")
 }
 
@@ -26,6 +28,7 @@ var flatCmd = &cobra.Command{
 		outputFiles, err := pdf.FlattenPDF(args, OutputDir, pdf.FlattenPDFOptions{
 			ImageDensity: ImageDensity,
 			ImageQuality: ImageQuality,
+			Threads:      Threads,
 		})
 
 		if err != nil {
