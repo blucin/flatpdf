@@ -9,10 +9,18 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "flatpdf",
 	Short: "A pdf flattener to make them read-only",
-	Long: `flatpdf is a mulithreaded pdf flattener to make them read-only.
-Pass pdf files as arguments to flat, new pdf files will be generated
-with the same name but with the suffix '_flat'. Use the -h flag to 
-see all available options.`,
+	Long: `flatpdf is a tool to flatten PDF files, making them read-only.
+
+You can pass multiple PDF files as input. By default, the flattened PDF files 
+will be saved in the same directory as the originals, with the suffix '_flat' added 
+to the file name. 
+
+Alternatively, you can use the '-o' flag to specify an output directory where 
+all flattened PDFs will be saved. Note that if a file with the same name already exists 
+in the output directory, it will be overwritten.
+
+Use the '-h' flag to view all available options.
+`,
 }
 
 var versionCmd = &cobra.Command{
